@@ -1,0 +1,124 @@
+@@ -1,11 +1 @@
+FROM tomcat:9.0
+
+   RUN rm -rf /usr/local/tomcat/webapps/ROOT
+
+   COPY target/SAH.war /usr/local/tomcat/webapps/ROOT.war
+
+
+   EXPOSE 8080
+
+
+   CMD ["catalina.sh", "run"]
+-------------------------------------------
+@@ -1,40 +1 @@
+version: "3.9"
+
+services:
+
+  app:
+
+    build: .
+
+    container_name: my_app
+
+    ports:
+
+      - "8080:8080"   # map host:container (change according to your app)
+
+  db:
+    image: mysql:8.0
+
+    container_name: my_mysql
+
+    restart: always
+
+    environment:
+
+      MYSQL_ROOT_PASSWORD: example
+
+      MYSQL_DATABASE: mydb
+
+    ports:
+
+      - "3306:3306"
+
+    volumes:
+
+      - db_data:/var/lib/mysql
+
+
+volumes:
+
+  db_data:
+------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>in.kmit</groupId>
+  <artifactId>EduAssessPro</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging> <!-- use war for webapp -->
+
+  <name>EduAssessPro Maven Webapp</name>
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <!-- JUnit for testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>EduAssessPro</finalName>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.4.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.4.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+
+
