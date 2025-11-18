@@ -29,3 +29,41 @@ pipeline {
         }
     }
 }
+
+
+minikube start
+minikube stop
+minikube delete
+minikube status
+minikube dashboard
+minikube service <service-name>
+minikube service <service-name> --url
+minikube tunnel
+kubectl get all
+kubectl get deployments
+kubectl get deploy
+kubectl get pods
+kubectl get po
+kubectl get svc
+kubectl get services
+kubectl get nodes
+kubectl get no
+kubectl create deployment myapp --image=nginx
+kubectl set image deployment/mynginx nginx=nginx:latest
+kubectl expose deployment mynginx --type=NodePort --port=80--target-port=80
+kubectl expose deployment mynginx --type=NodePort --port=8090 --target-port=80 --name=mynginx
+kubectl scale deployment mynginx --replicas=4
+kubectl port-forward svc/mynginx 8090:80
+
+
+Option 3: Minikube Tunnel
+minikube tunnel
+Get URL:
+minikube service mynginx --url
+minikube dashboard
+kubectl delete deployment mynginx
+kubectl delete service mynginx
+
+
+docker pull jasonrivers/nagios:latest
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
