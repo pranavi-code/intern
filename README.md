@@ -1437,4 +1437,15 @@ target/mywebapp.war
 ```
 
 Deploy on Tomcat.
+## 🚀 Deploying a WAR File on Tomcat (Always-Working Method)
+
+This is the most reliable and universal way to deploy any Java Web Application on Apache Tomcat.
+
+---
+
+### ✅ 1. Build the WAR File Using Maven
+Run the command:
+
+```bash
+mvn package
 
