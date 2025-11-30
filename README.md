@@ -1437,15 +1437,67 @@ target/mywebapp.war
 ```
 
 Deploy on Tomcat.
-## 🚀 Deploying a WAR File on Tomcat (Always-Working Method)
+# Tomcat Deployment Guide (Always Working Method)
 
-This is the most reliable and universal way to deploy any Java Web Application on Apache Tomcat.
-
----
-
-### ✅ 1. Build the WAR File Using Maven
-Run the command:
-
-```bash
+## 1. Build the WAR using Maven
+Run the Maven package command:
+```sh
 mvn package
+```
+
+## 2. Locate the Generated WAR
+After packaging, the WAR file is generated at:
+```
+target/mywebapp.war
+```
+
+## 3. Open Tomcat Installation Directory
+Navigate to your Tomcat folder:
+```
+C:\apache-tomcat-9.0.x\
+```
+
+## 4. Locate the webapps Folder
+Go into:
+```
+C:\apache-tomcat-9.0.x\webapps\
+```
+
+## 5. Copy & Paste the WAR File
+Place the WAR file here:
+```
+webapps/mywebapp.war
+```
+
+## 6. Start Tomcat Server
+Navigate to:
+```
+C:\apache-tomcat-9.0.x\bin\
+```
+Run:
+```
+startup.bat
+```
+(For shutdown)
+```
+shutdown.bat
+```
+
+## 7. Tomcat Auto Deploys the WAR
+Tomcat will automatically extract and create:
+```
+webapps/mywebapp/
+```
+
+## 8. Access the Web Application
+Open your browser and visit:
+```
+http://localhost:8080/mywebapp/
+```
+
+## Notes
+- No plugins needed.
+- Works for all Tomcat versions.
+- No dependency on Eclipse or Tomcat Manager.
+- This is the safest and most reliable way to deploy a WAR.
 
