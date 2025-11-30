@@ -800,3 +800,350 @@ git apply file.patch
 ```
 git am 0001-xxx.patch
 ```
+
+
+# Experiment 6: Docker CLI
+
+## A. Pull, Run, Stop, Start, Remove, Inspect Containers & Images (Redis Example)
+
+### Step 1: Pull Redis Image
+```
+docker pull redis
+```
+
+### Step 2: Run Redis Container
+```
+docker run --name my-redis -d redis
+```
+
+### Step 3: Check Running Containers
+```
+docker ps
+```
+
+### Step 4: Access Redis CLI
+```
+docker exec -it my-redis redis-cli
+```
+
+**Example Redis Commands:**
+```
+SET name "Alice"
+GET name
+```
+
+### Step 5: Stop Container
+```
+docker stop my-redis
+```
+
+### Step 6: Start Container
+```
+docker start my-redis
+```
+
+### Step 7: Remove Container
+```
+docker rm my-redis
+```
+
+### Step 8: Remove Image
+```
+docker rmi redis
+```
+
+---
+
+# B. Monitor & Troubleshoot Containers
+```
+docker run --name my-redis -d redis
+docker ps
+docker logs my-redis
+```
+
+---
+
+# C. Docker Networking
+
+### List Networks
+```
+docker network ls
+```
+
+### Create Custom Network
+```
+docker network create mynet
+```
+
+### Run Container in Network
+```
+docker run -d --name redis-server --network=mynet redis
+```
+
+### Inspect Network
+```
+docker network inspect mynet
+```
+
+---
+
+# D. Docker Volumes
+
+### Create Volume
+```
+docker volume create mydata
+```
+
+### List Volumes
+```
+docker volume ls
+```
+
+### Inspect Volume
+```
+docker volume inspect mydata
+```
+
+### Use Volume in Container
+```
+docker run -d --name my-reds -v mydata:/data redis
+```
+
+---
+
+# E. Manage Docker Images
+
+### List Images
+```
+docker images
+```
+
+### Remove Image
+```
+docker rmi image-name
+```
+
+### Pull Redis Image
+```
+docker pull redis
+```
+
+---
+
+# Experiment 6: Docker Compose
+
+## A. Multiple Services in One Compose File
+
+### I. Create `docker-compose.yml`
+```
+version: "3.9"
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
+```
+
+### II. Run Setup
+```
+docker compose up -d
+```
+
+### III. Open:
+```
+http://localhost:8080
+```
+
+---
+
+# B. Add Redis + depends_on
+
+### Add Redis Service
+```
+redis:
+  image: redis:alpine
+```
+
+### Add depends_on
+```
+web:
+  image: nginx:latest
+  ports:
+    - "8080:80"
+  depends_on:
+    - redis
+```
+
+### Restart
+```
+docker compose up -d
+docker compose ps
+```
+
+---
+
+# C. Deploy Compose Setup on Another Machine
+
+### Zip folder → Move → Run:
+```
+docker compose up -d
+```
+
+---
+
+# D. Networking + Volumes in Compose
+
+### Updated docker-compose.yml
+```
+networks:
+  app-net:
+
+volumes:
+  db-data:
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    networks:
+      - app-net
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-net
+```
+
+### Run:
+```
+docker compose up -d
+```
+
+### Access Postgres inside container:
+```
+docker exec -it <container_name> psql -U demo -d demo_db
+```
+
+### SQL:
+```
+CREATE TABLE users (
+id SERIAL PRIMARY KEY,
+name VARCHAR(50),
+email VARCHAR(100)
+);
+
+INSERT INTO users (name, email) VALUES 
+('Alice', 'alice@example.com'),
+('Bob', 'bob@example.com');
+
+SELECT * FROM users;
+```
+
+### Remove containers:
+```
+docker compose down
+```
+
+### Start again:
+```
+docker compose up -d
+```
+
+---
+
+# E. Faster Development with Docker + Flask
+
+### app.py
+```
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Hello from Flask + Docker!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+### Dockerfile
+```
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py /app/
+RUN pip install flask
+CMD ["python", "app.py"]
+```
+
+### docker-compose.yml Update
+```
+web:
+  build: .
+  ports:
+    - "5000:5000"
+  depends_on:
+    - db
+```
+
+### Build & Run
+```
+docker compose up --build
+```
+
+Visit:
+```
+http://localhost:5000
+```
+
+### Rebuild after editing app.py
+```
+docker compose up --build
+```
+
+
+## Dockerfile (for Flask App)
+
+Create a file named **Dockerfile** in the same folder as `app.py`:
+
+```Dockerfile
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py /app/
+RUN pip install flask
+CMD ["python", "app.py"]
+```
+
+### Build Docker Image
+```
+docker build -t flask-app .
+```
+
+### Run Container
+```
+docker run -d -p 5000:5000 --name flask-container flask-app
+```
+
+### Stop Container
+```
+docker stop flask-container
+```
+
+### Remove Container
+```
+docker rm flask-container
+```
