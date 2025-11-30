@@ -139,11 +139,15 @@ bat "mvn test -f mavenjava"
 } 
 } 
 stage('package') { 
-steps { 
-bat "mvn package -f mavenjava" 
-} 
-} 
-} 
+139 
+ 
+140 
+ 
+            steps { 
+                bat "mvn package -f mavenjava" 
+            } 
+        } 
+    } 
 } 
 
 
@@ -231,6 +235,8 @@ pipeline{
 
 
 https://github.com/savram674/MavenJavaDemo.git
+
+
 https://github.com/archanareddyse/mavenweb.git
 
 
@@ -245,15 +251,14 @@ Go to your GitHub repository.
 2. Navigate to Settings → Webhooks. 
 3. Click “Add webhook”. 
 4. In the Payload URL field: 
-o Enter the Jenkins webhook 
+o Enter the Jenkins 
+webhook 
 Add url example-------<https://unhired-stormily-alaine.ngrok-free.dev/github-webhook/>
-
 Open Jenkins Dashboard. 
 2. Select the job (freestyle or pipeline) you’ve already created.
 3. Click Configure. 
 4. Scroll down to the Build Triggers section. 
 5. Check the box: ✅GitHub hook trigger for GITScm polling
-
 1. Make any code update in your local repo and push it to GitHub. 
 
 git add .
@@ -335,22 +340,19 @@ jenkins deployment using tomcat:
 └── Add container -> Tomcat 9.x remote 
 └── Credentials: Username: admin, Password: 1234 
 ── Tomcat URL: https://localhost:8085/
-└── Apply and Save
-
-└── Step 5: Create Pipeline View for MavenWeb 
+└── Apply and Save└── Step 5: Create Pipeline View for MavenWeb 
 ├── Click "+" beside "All" on the dashboard 
 ├── Enter name: MavenWeb_Pipeline 
 ├── Select "Build pipeline view"
 └── Pipeline Flow: 
 ├── Layout: Based on upstream/downstream relationship 
 ├── Initial job: MavenWeb_Build 
-└── Apply and Save
-
-└── Step 6: Run the Pipeline and Check Output 
+└── Apply and Save└── Step 6: Run the Pipeline and Check Output 
 ├── Click on the trigger “RUN” to run the pipeline 
 Note:  
-1. After Click on Run -> click on the small black box to open the console to check if the build is success 
-2. Now we see all the build has success if it appears in green color
+1. After Click on Run -> click on the small black box to open the console to check if the 
+build is success 
+2. Now we see all the build has  success if it appears in green color
 
 
 extended email
