@@ -1147,3 +1147,294 @@ docker stop flask-container
 ```
 docker rm flask-container
 ```
+
+
+
+
+
+# Maven – Full Practical Guide
+
+## a. Build and package Java and Web applications using Maven
+**Command:**
+```
+mvn clean install
+```
+
+- **clean:** Deletes the previous build (`target/` folder)
+- **install:** Builds, tests, and installs the package to local `.m2` repository
+
+**After execution:**
+- `target/` folder contains compiled `.class` files and the final `.jar` or `.war`
+- Artifact stored in:
+```
+~/.m2/repository/groupId/artifactId/version/
+```
+
+---
+
+# Creation of Maven Java Project
+
+### Step 1. Open Eclipse IDE
+└── 1.1. Launch Eclipse workspace
+
+### Step 2. Install Maven Plugin (if not installed)
+└── 2.1. Go to "Help"  
+└── 2.1.1. Click "Eclipse Marketplace"  
+└── 2.1.2. Search "Maven Integration for Eclipse"  
+└── 2.1.3. Install if not installed
+
+### Step 3. Create a New Maven Project
+└── 3.1. File → New → Project  
+└── 3.1.1. Expand "Maven"  
+└── 3.1.2. Select "Maven Project" → Next
+
+### Step 4. Set Project Configuration
+└── 4.1. Select workspace  
+└── 4.2. Next
+
+### Step 5. Choose Maven Archetype
+└── 5.1. Choose:
+```
+org.apache.maven.archetypes → maven-archetype-quickstart (1.4)
+```
+└── 5.2. Next
+
+### Step 6. Define Project Metadata
+└── 6.1. Group ID: com.example  
+└── 6.2. Artifact ID: my-maven-project  
+└── 6.3. Version: default  
+└── 6.4. Finish  
+
+Console may ask Y/N → type **Y**
+
+### Step 7. Maven Project Created
+Project includes:
+- `src/main/java`
+- `src/test/java`
+- `pom.xml`
+
+### Step 8. Update Dependencies
+Right-click project → Maven → Update Project
+
+### Step 9. Build & Run Maven Project
+Right-click App.java → Run As:
+- Maven Clean  
+- Maven Install  
+- Maven Test  
+- Maven Build  
+
+### Step 10. Maven Build Dialog
+Goals:
+```
+clean install test
+```
+Apply → Run
+
+### Step 11. Check Console
+BUILD SUCCESS
+
+### Step 12. Run Application
+Right-click App.java → Run As → Java Application  
+Output: **"Hello World"**
+
+---
+
+# Creation of Maven Web Java Project
+
+### Step 1: Open Eclipse
+Launch workspace
+
+### Step 2: Create a New Maven Web Project
+File → New → Project  
+Expand Maven  
+Select "Maven Project" → Next
+
+### Step 3: Choose Archetype
+Search:
+```
+org.apache.maven.archetypes → maven-archetype-webapp (1.4)
+```
+Click Next
+
+### Step 4: Configure Project
+GroupId: com.example  
+ArtifactId: my-web-app  
+Finish
+
+### Step 5: Add Dependencies
+Edit pom.xml → add Servlet/JSP dependencies  
+Example:
+```xml
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+### Step 6: Configure Server
+Window → Show View → Servers  
+Add Tomcat v9.0
+
+### Step 7: Modify `tomcat-users.xml`
+Add roles & users
+
+### Step 8: Build the Project
+Right-click index.jsp → Run As:
+- Maven Clean
+- Maven Install
+- Maven Test
+- Maven Build
+
+### Step 9: Build Dialog
+Goals:
+```
+clean install test
+```
+
+### Step 10: Check BUILD SUCCESS
+
+### Step 11: Run Web App
+Right-click index.jsp → Run on Server  
+Select Tomcat  
+Finish
+
+### Step 12: Output
+"Hello World" webpage displayed.
+
+**Note:** Push your Maven Java & Web Projects to GitHub.
+
+---
+
+# b. Add Dependencies using pom.xml, Compile and Test
+
+### Add Dependency Example (Gson)
+```xml
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.10</version>
+</dependency>
+```
+
+### Run:
+```
+mvn clean install
+```
+
+Gson JAR downloaded to:
+```
+.m2/repository/com/google/code/gson/gson/
+```
+
+If version incorrect → BUILD FAILURE.
+
+---
+
+# c. Resolve Dependency Errors
+
+- Typos in version → build failure  
+- Missing repositories → failure  
+- Fix dependency & re-run:
+```
+mvn clean install
+```
+
+---
+
+# d. Multi-Module Maven Projects
+
+### Steps to Create Root (Parent) Project
+1. File → New → Other → Maven → Maven Project  
+2. Select “Create a Simple Project”  
+3. GroupId: KMIT  
+4. ArtifactId: MultiModule  
+5. Packaging: **pom**  
+6. Name: Multimodule Creation  
+7. Finish
+
+### Add Child Module 1
+Right-click parent → New → Maven Module  
+Select simple project  
+ArtifactId: MultiModuleChild1  
+Finish
+
+### Add Child Module 2 (Web Module)
+Right-click parent → New → Maven Module  
+ArtifactId: MultiModuleChild2  
+Choose archetype:
+```
+maven-archetype-webapp (1.1 / 1.5)
+```
+Finish → type Y if asked
+
+### Linking Modules
+In Child2's `pom.xml`:
+```xml
+<dependency>
+    <groupId>KMIT</groupId>
+    <artifactId>MultimoduleChild1</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+### Build Order
+Parent → Child1 → Child2  
+Child2 build fails if Parent/Child1 not built.
+
+---
+
+# e. Generate Executable JAR and WAR
+
+### Executable JAR (Add to pom.xml)
+```xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>com.example.Main</mainClass>
+          </manifest>
+        </archive>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+```
+
+### Build + Run:
+```
+mvn package
+java -jar target/myapp.jar
+```
+
+---
+
+# Executable WAR
+Project structure:
+```
+src/main/webapp/
+└── WEB-INF/web.xml
+```
+
+Add:
+```xml
+<packaging>war</packaging>
+```
+
+Build:
+```
+mvn package
+```
+
+WAR file location:
+```
+target/mywebapp.war
+```
+
+Deploy on Tomcat.
+
