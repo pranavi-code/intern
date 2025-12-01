@@ -709,97 +709,163 @@ Commands not required — GUI steps only.
 ---
 
 ## Collaborator 2 Setup
-### Configure Git
-```
+# Collaborative Git Workflow & Patch Management
+
+## C. Coordinating with Others Through a Shared Repository
+
+### Steps for Collaborator 1
+- Go to Settings > Collaborators
+- Click "Manage Access" → Add People
+- Add collaborator username
+- Invitation is sent to collaborator 2
+
+### Steps for Collaborator 2
+
+#### 1. Set Up Git and GitHub
+```sh
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
+git remote -v
+```
+If origin shows:
+```
+git@github.com:OrgYOG/commonREPO.git
+```
+then:
+```
+git remote -v
 ```
 
-### Clone shared repo
-```
-git clone <shared-url>
-cd repo
-```
-
-### Create feature branch
-```
-git checkout -b feature/your-feature
+#### 2. Clone the Repository
+```sh
+git clone https://github.com/username/repository-name.git
+cd repository-name
 ```
 
-### Commit & push
+#### 3. Create a Branch
+```sh
+git checkout -b feature/your-feature-name
 ```
+
+#### 4. Make Changes and Commit
+```sh
 git add .
-git commit -m "message"
-git push origin feature/your-feature
+git commit -m "Add a clear and descriptive commit message"
 ```
 
-### Update branch
+#### 5. Push the Branch
+```sh
+git push origin feature/your-feature-name
 ```
+
+#### 6. Keep Branch Updated
+```sh
 git checkout main
 git pull origin main
-git checkout feature/your-feature
+git checkout feature/your-new-feature
 git merge main
 ```
 
 ---
 
-# Fork Workflow
-### Clone your fork
+## Fork Workflow (Public Repos)
+1. Go to: `https://github.com/Person1/awesome-project`
+2. Click **Fork**
+3. Clone fork:
+```sh
+git clone https://github.com/your-username/awesome-project
 ```
-git clone <your-fork-url>
-```
-
-### Commit & push
-```
+4. Make changes:
+```sh
 git add .
 git commit -m "message"
 git push origin main
 ```
+5. Create Pull Request:
+- Go to Pull Requests → New Pull Request
+- Add title & description → Submit
 
-### Create Pull Request  
-(GitHub UI)
+### For Repo Owner:
+- Go to Pull Requests
+- Review changes → Submit review
+- Click **Merge Pull Request**
+- Confirm merge
 
 ---
 
-# Resolve Conflicts
-### Identify conflict
-```
+## D. Resolving Conflicts
+
+#### 1. Check files in conflict:
+```sh
 git status
 ```
 
-### After editing file:
+Example conflict:
 ```
-git add <file>
+<<<<<<< HEAD
+print("Hello from First collaborator")
+=======
+print("Hello from Second collaborator")
+>>>>>>> feature/second-branch
+```
+
+#### 2. Edit file → resolve conflict → remove markers
+
+#### 3. Mark as resolved:
+```sh
+git add f1.txt
 git commit
 ```
 
-### Abort merge
+#### 4. If rebasing:
+```sh
+git rebase --continue
 ```
+
+#### 5. Abort merge:
+```sh
 git merge --abort
 ```
 
 ---
 
-# Patch Creation
-### Create patch from commit
+## E. Creating and Applying Patch Files
+
+### 1. Clone and edit repository  
+### 2. Commit changes  
+### 3. View commit hash
+```sh
+git log
 ```
+
+### 4. Create patch (one commit)
+```sh
 git format-patch -1 <commit-hash>
 ```
 
-### Create patches for last 3 commits
-```
+### 5. Create patch for last 3 commits
+```sh
 git format-patch -3
 ```
 
-### Apply patch
-```
-git apply file.patch
+### 6. Create patch between commits
+```sh
+git format-patch <base_commit>..HEAD
 ```
 
-### Apply format-patch
+### 7. Send .patch file (email/WhatsApp)
+
+### 8. Apply patch on owner side:
+```sh
+git apply my-changes.patch
 ```
-git am 0001-xxx.patch
+
+For format-patch:
+```sh
+git am 0001-Your-commit-message.patch
 ```
+
+
 
 
 # Experiment 6: Docker CLI
