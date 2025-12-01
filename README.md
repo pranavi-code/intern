@@ -1,9 +1,4 @@
-# Intern Notes – Complete DevOps, Jenkins, Docker, Kubernetes, Git, AWS, UML & More  
-*(Every single word preserved exactly as provided)*  
 
----
-
-# ✔️ 4 Questions – 25 Each
 
 # Jenkins
 
