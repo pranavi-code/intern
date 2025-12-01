@@ -864,6 +864,152 @@ For format-patch:
 ```sh
 git am 0001-Your-commit-message.patch
 ```
+# Git Patch & Merge Conflict Demonstration
+
+## 🟦 1. Patch File Exercise (Person A ➜ Person B)
+
+### ✅ Step 1: Person A — Create Repo & Change
+```sh
+mkdir p1
+cd p1
+git init
+
+echo "Hello World" > demo.txt
+git add demo.txt
+git commit -m "Initial commit"
+
+echo "Added by Person A" >> demo.txt
+git add demo.txt
+git commit -m "Person A changes"
+
+git format-patch -1
+```
+
+A patch file like:
+```
+0001-Person-A-changes.patch
+```
+is generated.
+
+---
+
+### ✅ Step 2: Person B — Prepare Same Base Version
+```sh
+mkdir ../p2
+cd ../p2
+git init
+
+echo "Hello World" > demo.txt
+git add demo.txt
+git commit -m "Initial commit"
+```
+Copy the patch file into p2 folder.
+
+---
+
+### ✅ Step 3: Apply Patch
+```sh
+git apply 0001-Person-A-changes.patch
+```
+
+### Expected Output File:
+```
+Hello World
+Added by Person A
+```
+
+---
+
+# 🟩 2. Merge Conflict Demonstration (feature-A vs feature-B)
+
+## ✅ Step 1: Create Project
+```sh
+mkdir conflict-demo
+cd conflict-demo
+git init
+
+echo "Hello from main" > demo.txt
+git add demo.txt
+git commit -m "Initial commit"
+```
+
+---
+
+## ✅ Step 2: Create feature-A & Modify Same File
+```sh
+git checkout -b feature-A
+echo "Change from Feature A" > demo.txt
+git add demo.txt
+git commit -m "Feature A changes"
+```
+
+---
+
+## ✅ Step 3: Create feature-B & Modify Same File
+```sh
+git checkout main
+git checkout -b feature-B
+echo "Change from Feature B" > demo.txt
+git add demo.txt
+git commit -m "Feature B changes"
+```
+
+---
+
+## ✅ Step 4: Merge feature-A into main
+```sh
+git checkout main
+git merge feature-A
+```
+
+---
+
+## ✅ Step 5: Merge feature-B into main (Conflict Occurs)
+```sh
+git merge feature-B
+```
+
+Git shows:
+```
+CONFLICT (content): Merge conflict in demo.txt
+```
+
+---
+
+## 🟥 Conflict Markers in File (demo.txt)
+```
+<<<<<<< HEAD
+Change from Feature A
+=======
+Change from Feature B
+>>>>>>> feature-B
+```
+
+---
+
+## ✅ Step 6: Resolve Conflict Manually  
+Edit file to remove conflict markers:
+
+```
+Change from Feature A
+Change from Feature B
+```
+
+---
+
+## ✅ Step 7: Mark as Resolved
+```sh
+git add demo.txt
+git commit -m "Resolved merge conflict"
+```
+
+---
+
+# ✔ Both Patch Exercise & Merge Conflict Complete
+- Patch creation & applying demo  
+- Merge conflict detection & manual resolution  
+
+This README contains **all steps required for lab demonstration**.
 
 
 
