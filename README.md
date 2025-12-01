@@ -933,6 +933,31 @@ docker pull redis
 # Experiment 6: Docker Compose
 
 ## A. Multiple Services in One Compose File
+### docker-compose
+```
+version: '3.8'  # Docker Compose file format version
+
+services:
+  wordpress:  # WordPress service
+    image: wordpress:latest
+    ports:
+      - "8080:80"  # Map port 80 of the container to port 8080 of the host
+    environment:
+      WORDPRESS_DB_HOST: db:3306  # Database host
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - db  # Ensures the db service starts first
+
+  db:  # MySQL service
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+```
 
 ### I. Create `docker-compose.yml`
 ```
