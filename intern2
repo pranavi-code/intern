@@ -1,0 +1,226 @@
+Internship project details:
+android:
+Analysing Android App Permissions and Mobile Traffic:
+C:\Users\Admin>cd C:\Users\Admin\AppData\Local\Android\Sdk\emulator
+C:\Users\Admin\AppData\Local\Android\Sdk\emulator>emulator -list-avds
+C:\Users\Admin\AppData\Local\Android\Sdk\emulator>emulator -avd Pixel_9 -http-proxy http://10.0.2.2:8080
+
+In phone:
+Settings-> Network and Internet-> internet->select icon -> top right corner there is edit-
+>advanced options -> proxy->Change proxy None->Manual->Hostname as 10.0.2.2 ->save
+
+Command Prompt2:
+C:\Users\Admin>cd C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb devices
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb shell settings put global http_proxy 10.0.2.2:8080
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb shell settings get global http_proxy
+
+In BurpSuit:
+Go proxy->options/proxy settings->under Proxy Listeners->Edit/Add->select All interfaces->ok, port:8080
+Go proxy->intercept on
+in phone type in chrome example.com and you can see burpsuit HTTP history
+
+
+Go procy->options/proxy settings->import/export CA certificate->export Certificate in DER format-
+>select file-> Downloads->give name as burpcer.der
+Go to command Prompt2
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb push C:\Users\Admin\Downloads\burpcer.der /sdcard/Download/
+
+To install Certificate in AVD
+Settings→ Security & privacy→ More security & privacy→ Encryption & credentials→ Install a certificate→ CA certificate
+In AVD we can see burpcer.der certificate
+
+Open browser in emulator.
+Visit any HTTPS website.
+Example:https://example.com
+
+check Proxy → HTTP History.
+-----------------------------------------------------------------------------
+
+Testing IoT Device Security:
+
+docker run -d -p 8090:3000 --name juiceshop bkimminich/juice-shop
+docker start juiceshop
+http://localhost:8090
+
+ipconfig
+From Kali Linux terminal: nmap -sV 192.168.0.148
+
+web browser normal: http://localhost:8090
+login with default credentials: admin@juice-sh.op password admin123
+Developer Tools → Network Tab
+• Network tab showing HTTP requests
+• Plain text traffic visible
+---------------------------------------------------------------------------------
+Analyzing Disk Images with FTK Imager(dc3dd):
+kali:
+echo "Cybersecurity Lab Evidence" > evidence.txt
+ls
+lsblk
+sudo apt install dc3dd
+dd if=/dev/zero of=practice_disk.dd bs=1M count=100
+mkfs.ext4 practice_disk.dd
+ls -lh /home/kali/disk_image.dd
+cat /home/kali/acquisition.log
+sudo autopsy
+http://localhost:9999/autopsy
+
+casename CyberForensiclab
+description creating a new forensice investigation
+
+investigationanme admin
+click new case
+click add host
+click add image
+add image file /home/kali/disk_image.dd or location /home/kmit/practise_disk.dd
+select type partition
+next
+image file details ---> calculate hash value for this image
+click add
+click ok
+clcik  analyze
+click  file analysis key word search that all top menu
+---------------------------------
+log file analysis:
+cd /var/log
+ls
+last
+journalctl | less
+journalctl | grep "Failed"
+journalctl | grep ssh
+journalctl | grep -i error
+Apache Log Analysis
+Command:
+cd /var/log/apache2
+ls
+sudo less access.log
+grep "404" /var/log/apache2/access.log
+less /var/log/dpkg.log
+sudo journalctl -f
+
+METHOD 1: SIMULATE FAILED SSH LOGIN 
+Step 1: Ensure SSH is Installed->>>sudo apt install openssh-server –y
+Step 2: Start SSH Service--->sudo service ssh start
+Step 3: Find Your IP Address--->ip a     like(inet 192.168.x.x)
+-ssh -4 kali@127.0.0.1 - enter password(correct)
+Step 4: Attempt Wrong Login (GENERATE FAILURES)
+run:
+ssh fakeuser@localhost
+OR
+ssh kali@localhost
+Enter wrong password multiple times (5–10 times)
+Step 5: Check Failed Logins--->journalctl | grep "Failed password"
+Step 6: Extract Suspicious IP--->journalctl | grep "Failed password" | awk '{print $11}'
+Step 7: Count Attempts Per IP-->journalctl | grep "Failed password" | awk '{print $11}' | sort | uniq -c | sort -nr
+METHOD 2: Use lastb (Alternative)
+sudo lastb
+journalctl --since "10 minutes ago"-->>shows recent attack activity
+---------------------------------------------------------------------
+
+Privacy Audit of Popular Apps:
+sudo apt update
+sudo apt install nodejs npm –y
+sudo npm install -g nativefier
+nativefier https://web.whatsapp.com
+cd WhatsAppWeb-linux-x64
+./WhatsAppWeb
+Scan QR code using mobile 
+
+Open browser in Kali
+Go to: https://reports.exodus-privacy.eu.org
+Search for WhatsApp
+record Number of trackers Permissions used
+
+Wireshark
+Select interface (eth0 / wlan0)
+Click Start Capture
+In WhatsApp Desktop: Send message
+Apply Filters /Use filters:tls,dns
+
+Open Facebook https://www.facebook.com
+Login using test account
+Burpsuite
+Configure Proxy
+IP: 127.0.0.1
+Port: 8080
+In browser: Settings → Network → Manual Proxy
+Turn Intercept ON
+Reload Facebook
+
+Press F12 → Network tab
+Look for:Ads,Analytics scripts, Third-party requests
+
+Check Email Breach
+Go to:https://haveibeenpwned.com
+Enter email → check breach status
+-------------------------------------------------------------
+
+Conducting a Security Audit and Risk Assessment
+STEP 1: System Information
+• Press Windows + R
+• Type: msinfo32
+Note:
+• OS Version
+• System Type
+
+STEP 2: Check Windows Updates
+Steps:
+• Open Settings
+• Go to Windows Update
+• Click Check for updates
+
+STEP 3: Check Firewall Status
+Steps:
+• Search: Windows Defender Firewall
+• Click Turn Windows Defender Firewall on or off
+STEP 4: Check Antivirus (Windows Security)
+Steps:
+• Open Windows Security
+• Go to Virus & Threat Protection
+Check:
+• Real-time protection → ON
+• Last scan → Recent
+
+STEP 5: Check Password & Account Security
+Steps:
+• Settings → Accounts → Sign-in options
+Check:
+• Password / PIN enabled
+• Windows Hello (optional)
+STEP 6: Check Installed Applications
+Steps:
+• Settings → Apps → Installed apps
+Look for:
+• Unknown software
+• Cracked tools
+
+STEP 7: Check Startup Programs
+Steps:
+• Press Ctrl + Shift + Esc
+• Go to Startup tab
+Disable:
+• Unknown apps
+
+STEP 8: Check Network Security
+Steps:
+• Settings → Network & Internet
+• Check:
+o WiFi connection
+o Network type → Private/Public
+Network Overview
+• Wi-Fi connected → 41-0-Staff-Internet
+• Status → Connected, secured
+• Shows general network info
+
+STEP 9: Check Browser Security
+Steps (Chrome/Edge):
+• Go to Settings → Privacy & Security
+• Check:
+o Safe browsing ON
+o Remove unknown extensions
+
+STEP 10: Check Data Backup
+Steps:
+• Search: Backup settings
+• Check:
+o OneDrive / External backup
