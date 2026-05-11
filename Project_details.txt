@@ -28,6 +28,7 @@ sns->s3->email(in sns access policy)
 Add in SQS Access Policy
 Open SQS → Edit policy
 {
+  "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
@@ -35,15 +36,15 @@ Open SQS → Edit policy
         "Service": "sns.amazonaws.com"
       },
       "Action": "sqs:SendMessage",
-      "Resource": "YOUR_SQS_ARN",
+      "Resource": "SQS_QUEUE_ARN",
       "Condition": {
         "ArnEquals": {
-          "aws:SourceArn": "YOUR_SNS_ARN"
+          "aws:SourceArn": "SNS_TOPIC_ARN"
         }
       }
     }
   ]
-}]
+}
 
 
 
@@ -53,24 +54,21 @@ Same as earlier policy (S3 → SNS)
 
 {
   "Version": "2012-10-17",
-  "Id": "example-ID",
   "Statement": [
     {
-      "Sid": "Example SNS topic policy",
+      "Sid": "AllowS3Publish",
       "Effect": "Allow",
       "Principal": {
         "Service": "s3.amazonaws.com"
       },
-      "Action": [
-        "SNS:Publish"
-      ],
-      "Resource": "YOUR_SNS_TOPIC_ARN",
+      "Action": "SNS:Publish",
+      "Resource": "SNS_TOPIC_ARN",
       "Condition": {
         "ArnLike": {
-          "aws:SourceArn": "YOUR_S3_BUCKET_ARN"
+          "aws:SourceArn": "S3_BUCKET_ARN"
         },
         "StringEquals": {
-          "aws:SourceAccount": "YOUR_ACCOUNT_ID"
+          "aws:SourceAccount": "ACCOUNT_ID"
         }
       }
     }
@@ -82,7 +80,9 @@ Same as earlier policy (S3 → SNS)
 Lambda Consumer:
 
 def lambda_handler(event, context):
+
     for record in event['Records']:
+
         print("Message received from SQS:")
         print(record['body'])
 
@@ -90,7 +90,6 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': 'Message processed successfully'
     }
-
 
 
 
