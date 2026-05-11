@@ -227,3 +227,47 @@ def lambda_handler(event, context):
 
 </body>
 </html>
+
+
+
+lex lambda processing:
+import json
+
+def lambda_handler(event, context):
+
+    slots = event['sessionState']['intent']['slots']
+
+    location = slots['location']['value']['interpretedValue']
+    checkin = slots['checkin']['value']['interpretedValue']
+    nights = slots['nights']['value']['interpretedValue']
+    roomtype = slots['roomtype']['value']['interpretedValue']
+
+    intent_name = event['sessionState']['intent']['name']
+
+    message = f"""
+Booking Confirmed!
+
+Location: {location}
+Check-in: {checkin}
+Nights: {nights}
+Room Type: {roomtype}
+"""
+
+    return {
+        "sessionState": {
+            "dialogAction": {
+                "type": "Close"
+            },
+            "intent": {
+                "name": intent_name,
+                "state": "Fulfilled"
+            }
+        },
+        "messages": [
+            {
+                "contentType": "PlainText",
+                "content": message
+            }
+        ],
+        "sessionId": event["sessionId"]
+    }
