@@ -1,5 +1,5 @@
 # lab
-
+```
 <dependencies>
 <dependency>
 <groupId>org.seleniumhq.selenium</groupId>
@@ -12,6 +12,7 @@
 <version>2.4.240</version>
 </dependency>
 </dependencies>
+```
 
 **Experiment 2**
 
