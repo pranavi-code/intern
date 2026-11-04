@@ -639,74 +639,35 @@ Price    Category      Result
 
 <a id="exp-7d"></a>
 
-## Experiment 7(d) — Data Driven Test Through Excel
+## Experiment 7(a) - Dynamic Test Data Submission
 
 Requires **Apache POI OOXML** (manual version: `5.2.5`) and its transitive dependencies. Recommended: create a Maven project and add the dependency below. Copy `ExcelDrivenTest.java` into `src/main/java/`.
 
 ### Java code — `ExcelDrivenTest.java`
 
 ```java
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.io.*;
-
-public class ExcelDrivenTest {
-    public static double calculateDiscount(double price, String category) {
-        switch (category) {
-            case "electronics": return price * 0.9;
-            case "clothing": return price * 0.8;
-            default: return price;
-        }
-    }
-
-    public static void createExcelFile() throws IOException {
-        Workbook wb = new XSSFWorkbook();
-        Sheet sheet = wb.createSheet("TestData");
-        Object[][] data = {
-                {"Price", "Category"},
-                {500.0, "electronics"},
-                {300.0, "clothing"},
-                {150.0, "grocery"}
-        };
-
-        for (int r = 0; r < data.length; r++) {
-            Row row = sheet.createRow(r);
-            for (int c = 0; c < data[r].length; c++) {
-                Cell cell = row.createCell(c);
-                if (data[r][c] instanceof Double)
-                    cell.setCellValue((Double) data[r][c]);
-                else
-                    cell.setCellValue((String) data[r][c]);
-            }
-        }
-
-        try (FileOutputStream fos = new FileOutputStream("testdata.xlsx")) {
-            wb.write(fos);
-        }
-        wb.close();
-    }
-
-    public static void excelDrivenTest() throws IOException {
-        System.out.println("---- Data Driven Test via Excel ----");
-        try (FileInputStream fis = new FileInputStream("testdata.xlsx");
-             Workbook wb = new XSSFWorkbook(fis)) {
-            Sheet sheet = wb.getSheetAt(0);
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) continue;
-                double price = row.getCell(0).getNumericCellValue();
-                String category = row.getCell(1).getStringCellValue();
-                double result = calculateDiscount(price, category);
-                System.out.printf(
-                        "price=%.1f, category=%s -> discounted=%.2f%n",
-                        price, category, result);
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        createExcelFile();
-        excelDrivenTest();
-    }
+import java.util.Random;
+public class DynamicDataTest {
+ public static double calculateDiscount(double price, String category) {
+ switch (category) {
+ case "electronics": return price * 0.9;
+ case "clothing": return price * 0.8;
+ default: return price;
+ }
+ }
+ public static void main(String[] args) {
+ String[] categories = {"electronics", "clothing", "grocery"};
+ Random rand = new Random();
+ System.out.println("---- Dynamic Test Data Submission ----");
+ for (int i = 1; i <= 5; i++) {
+ int price = 100 + rand.nextInt(901);
+ String category = categories[rand.nextInt(categories.length)];
+ double result = calculateDiscount(price, category);
+ System.out.printf(
+ "Test %d: price=%d, category=%s -> discounted=%.2f%n",
+ i, price, category, result);
+ }
+ }
 }
 ```
 
@@ -739,10 +700,12 @@ java -cp ".;lib/*" ExcelDrivenTest
 ### Expected output
 
 ```text
----- Data Driven Test via Excel ----
-price=500.0, category=electronics -> discounted=450.00
-price=300.0, category=clothing -> discounted=240.00
-price=150.0, category=grocery -> discounted=150.00
+---- Dynamic Test Data Submission ----
+Test 1: price=527, category=electronics -> discounted=474.30
+Test 2: price=304, category=clothing -> discounted=243.20
+Test 3: price=812, category=grocery -> discounted=812.00
+Test 4: price=450, category=electronics -> discounted=405.00
+Test 5: price=265, category=clothing -> discounted=212.0
 ```
 
 **Notes:** Creates (overwrites) `testdata.xlsx` using `XSSFWorkbook`, then reads every data row (skipping the header). Maven resolves required transitive libraries more reliably than a partial hard-coded JAR list.
